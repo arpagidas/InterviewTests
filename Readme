@@ -1,0 +1,13 @@
+- Use m2m client id or any other client with "api" allowed scope, as described in https://demo.identityserver.io/ to access the customers api using oauth2 authentication.
+  You can get your token from https://demo.identityserver.io/connect/token endpoint.
+    The endpoints are:
+        -GET: api/customers?page=1&pageSize=10
+          Parameters page and pageSize can be ignored. The above values are the default values.
+        -GET: api/customers/{id}
+          Where id is the customer's id that you want to read.
+        -POST: api/customers
+        -PUT: api/customers/{id}
+          Where id is the customer's id that you want to update.
+        -DELETE: api/customers/{id}
+          Where id is the customer's id that you want to delete.
+- To login to the UI you can use the username user1 and password P@ssword1.
