@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp.Models
 {
     public class Customer
     {
-        public string Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
         public string Address { get; set; }

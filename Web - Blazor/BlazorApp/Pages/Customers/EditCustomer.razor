@@ -1,0 +1,59 @@
+﻿@page "/customers/edit/{CustomerId}"
+@attribute [Authorize]
+
+@if (Customer == null && _finishedLoading)
+{
+    <h4>There is no customer with id @CustomerId</h4>
+}
+else if (Customer != null && _finishedLoading)
+{
+    <div class="container-fluid justify-content-start mt-1">
+        <div class="row my-1 mx-0 text-start">
+            <button class="btn btn-success oi oi-check" style="width:40px;height:40px;" @onclick="UpdateCustomer"></button>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="company" placeholder="Company name" style="@GetCompanyNameStyle()" @bind="Customer.CompanyName"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="contact" placeholder="Contact name" style="@GetContactNameStyle()" @bind="Customer.ContactName"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="address" placeholder="Address" style="@GetAddressStyle()" @bind="Customer.Address"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="city" placeholder="City" style="@GetCityStyle()" @bind="Customer.City"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="region" placeholder="Region" style="@GetRegionStyle()" @bind="Customer.Region"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="postalCode" placeholder="PostalCode" style="@GetPostalCodeStyle()" @bind="Customer.PostalCode"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="country" placeholder="Country" style="@GetCountryStyle()" @bind="Customer.Country"/>
+            </div>
+        </div>
+        <div class="row my-2 justify-content-start">
+            <div class="col-12 col-md-8">
+                <input type="text" class="my-auto w-100" id="phone" placeholder="Phone" style="@GetPhoneStyle()" @bind="Customer.Phone"/>
+            </div>
+        </div>
+    </div>
+}
+else 
+{
+    <Spinner/>
+}

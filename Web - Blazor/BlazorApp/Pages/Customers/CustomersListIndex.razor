@@ -1,0 +1,236 @@
+﻿@page "/customers"
+@attribute [Authorize]
+
+<div class="container-fluid justify-content-center">
+    <div class="row my-1 justify-content-start">
+        <div class="col-2 text-start">
+            <a href="customers/new" class="btn btn-success oi oi-plus" title="New customer"></a>
+        </div>
+    </div>
+    @if (PagedCustomers != null)
+    {
+        <div class="row my-1">
+            @foreach(var customer in PagedCustomers.Customers)
+            {
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-3 my-3">
+                    <div class="card text-center border-success h-100 p-1 mb-3 justify-content-between align-items-center">
+                        <div>
+                            <div class="row my-1">
+                                <div class="col text-start text-md-end">
+                                    <label>Id</label>
+                                
+                                </div>
+                                <div class="col text-end text-md-start">
+                                    <label>@customer.Id</label>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col text-start text-md-end">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col text-end text-md-start">
+                                    <label>@customer.ContactName</label>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col text-start text-md-end">
+                                    <label>Company</label>
+                                </div>
+                                <div class="col text-end text-md-start">
+                                    <label>@customer.CompanyName</label>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col text-start text-md-end">
+                                    <label>City</label>
+                                </div>
+                                <div class="col text-end text-md-start">
+                                    <label>@customer.City</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row my-1 mx-0 justify-content-center">
+                                <div class="col">
+                                    <btn style="cursor: pointer;" class="btn btn-dark oi oi-document mx-auto p-2" 
+                                        title="Details" data-bs-toggle="modal" data-bs-target="#customer-details"
+                                        @onclick="() => GetCustomerDetailsById(customer.Id)"></btn>
+                                </div>
+                                <div class="col">
+                                    <a href="@GetCustomerLink(customer.Id)" class="btn btn-info oi oi-pencil mx-auto p-2" title="Edit"></a>
+                                </div>
+                                <div class="col">
+                                    <btn style="cursor: pointer;" class="btn btn-danger oi oi-trash mx-auto p-2" 
+                                        title="Delete" data-bs-toggle="modal" data-bs-target="#customer-delete"
+                                        @onclick="() => OnDeleteCustomerClicked(customer)"></btn>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row w-100">
+            <Pagination MetaData="PagedCustomers.Metadata" Spread="3" SelectedPage="SelectedPage"/>
+        </div>
+    }
+</div>
+
+
+<div class="modal fade" id="customer-delete" tabindex="-1" role="dialog" aria-labelledby="CustomerDelete" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Customer deletion</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" @onclick="OnCustomerDeleteClosed">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (CustomerToDelete != null)
+                {
+                    <div class="container-fluid">
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Id</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerToDelete.Id</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>ContactName</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerToDelete.ContactName</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>CompanyName</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerToDelete.CompanyName</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>City</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerToDelete.City</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close" title="Close" @onclick="() => OnCustomerDeleteClosed()">
+                    Close
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Delete" title="Delete" @onclick="async () => await DeleteCustomer(CustomerToDelete.Id)">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customer-details" tabindex="-1" role="dialog" aria-labelledby="Customer details" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Customer details</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" @onclick="OnCustomerDetailsClosed">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (CustomerDetails != null)
+                {
+                    <div class="container-fluid">
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Id</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.Id</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>CompanyName</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.CompanyName</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>ContactName</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.ContactName</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Address</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.Address</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>City</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.City</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Region</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.Region</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Postal code</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.PostalCode</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Country</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.Country</label>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between my-1">
+                            <div class="col text-left my-1">
+                                <label>Phone</label>
+                            </div>
+                            <div class="col text-right my-1">
+                                <label>@CustomerDetails.Phone</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close" title="Close" @onclick="() => OnCustomerDetailsClosed()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
